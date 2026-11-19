@@ -1,0 +1,9 @@
+{
+  "source": "AWS Pricing API (AmazonBedrock, AmazonBedrockFoundationModels), us-east-1, standard on-demand tier",
+  "checked_on": "2026-11-19",
+  "currency": "USD",
+  "per_million_tokens": {
+    "us.anthropic.claude-sonnet-5": {"input": 2.20, "output": 11.00},
+    "us.amazon.nova-2-lite-v1:0": {"input": 0.33, "output": 2.75}
+  }
+}
