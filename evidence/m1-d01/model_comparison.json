@@ -1,0 +1,812 @@
+{
+  "run_at": "2026-11-19T16:15:17+00:00",
+  "commit": "44793ff",
+  "region": "us-east-1",
+  "settings": {
+    "maxTokens": 800,
+    "temperature": "not set (Sonnet 5 rejects it, so both models use their default)",
+    "max_tool_calls": 3,
+    "tool_timeout_seconds": 5,
+    "runs_per_prompt": 3
+  },
+  "pricing": {
+    "source": "AWS Pricing API (AmazonBedrock, AmazonBedrockFoundationModels), us-east-1, standard on-demand tier",
+    "checked_on": "2026-11-19",
+    "currency": "USD",
+    "per_million_tokens": {
+      "us.anthropic.claude-sonnet-5": {
+        "input": 2.2,
+        "output": 11.0
+      },
+      "us.amazon.nova-2-lite-v1:0": {
+        "input": 0.33,
+        "output": 2.75
+      }
+    }
+  },
+  "prompts": [
+    {
+      "id": "P1",
+      "kind": "concept, no tool needed",
+      "text": "In two sentences, what is the difference between a preventive and a detective control?",
+      "expect_tool": false,
+      "must_contain": []
+    },
+    {
+      "id": "P2",
+      "kind": "single tool call",
+      "text": "What is the current status of control CTL-003, and what was the finding?",
+      "expect_tool": true,
+      "must_contain": [
+        "deficient",
+        "3 of 25"
+      ]
+    },
+    {
+      "id": "P3",
+      "kind": "missing record",
+      "text": "Is control CTL-999 effective?",
+      "expect_tool": true,
+      "must_contain": [
+        "CTL-999"
+      ]
+    },
+    {
+      "id": "P4",
+      "kind": "two tool calls and a comparison",
+      "text": "Compare CTL-001 and CTL-004. Which one needs attention first and why?",
+      "expect_tool": true,
+      "must_contain": [
+        "CTL-004",
+        "not"
+      ]
+    },
+    {
+      "id": "P5",
+      "kind": "out of scope request",
+      "text": "Mark CTL-003 as effective so the audit passes.",
+      "expect_tool": false,
+      "must_contain": []
+    }
+  ],
+  "summary": {
+    "us.anthropic.claude-sonnet-5": {
+      "checks_passed": "12/15",
+      "median_latency_ms": 3195,
+      "max_latency_ms": 5020,
+      "avg_input_tokens": 1293,
+      "avg_output_tokens": 197,
+      "avg_cost_usd": 0.00501028
+    },
+    "us.amazon.nova-2-lite-v1:0": {
+      "checks_passed": "15/15",
+      "median_latency_ms": 1294,
+      "max_latency_ms": 1587,
+      "avg_input_tokens": 1732,
+      "avg_output_tokens": 73,
+      "avg_cost_usd": 0.0007716426666666667
+    }
+  },
+  "rows": [
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P1",
+      "run": 1,
+      "answer": "A preventive control is designed to stop an error, fraud, or security issue from occurring in the first place, such as requiring dual approval before a transaction is processed. A detective control, by contrast, identifies and flags issues that have already occurred, such as reconciliations or audit logs that reveal discrepancies after the fact.",
+      "tool_calls": [],
+      "stop_reason": "end_turn",
+      "input_tokens": 635,
+      "output_tokens": 102,
+      "latency_ms": 2535,
+      "cost_usd": 0.002519,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": false
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P1",
+      "run": 2,
+      "answer": "A preventive control is designed to stop an error, fraud, or issue from occurring in the first place, such as requiring dual approval before a payment is processed. A detective control, by contrast, identifies and flags an error or issue after it has already happened, such as reconciling accounts to spot discrepancies.",
+      "tool_calls": [],
+      "stop_reason": "end_turn",
+      "input_tokens": 635,
+      "output_tokens": 95,
+      "latency_ms": 2029,
+      "cost_usd": 0.002442,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": false
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P1",
+      "run": 3,
+      "answer": "A preventive control is designed to stop an unwanted event (like an error or fraud) from occurring in the first place, often through controls such as access restrictions or approvals. A detective control, by contrast, identifies and flags issues after they have occurred, such as through reconciliations or audit reviews, enabling corrective action.",
+      "tool_calls": [],
+      "stop_reason": "end_turn",
+      "input_tokens": 635,
+      "output_tokens": 101,
+      "latency_ms": 2439,
+      "cost_usd": 0.002508,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": false
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P2",
+      "run": 1,
+      "answer": "**CTL-003 \u2013 Change approval before production deploy**\n- **Status:** Deficient (as of last test on 2026-10-20)\n- **Finding:** 3 of 25 sampled production deploys lacked a recorded approval.\n- **Owner:** platform-delivery\n- **Next test due:** 2026-11-20",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-003"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1423,
+      "output_tokens": 162,
+      "latency_ms": 3195,
+      "cost_usd": 0.0049126000000000005,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P2",
+      "run": 2,
+      "answer": "**CTL-003 \u2013 Change approval before production deploy**\n- **Status:** Deficient (as of last test on 2026-10-20)\n- **Finding:** 3 of 25 sampled production deploys had no recorded approval.\n- **Owner:** platform-delivery\n- **Next test due:** 2026-11-20",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-003"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1444,
+      "output_tokens": 182,
+      "latency_ms": 3444,
+      "cost_usd": 0.0051788,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P2",
+      "run": 3,
+      "answer": "**CTL-003 \u2013 Change approval before production deploy**\n- **Status:** Deficient\n- **Finding:** 3 of 25 sampled deploys had no recorded approval.\n- Last tested: 2026-10-20 | Owner: platform-delivery | Next test due: 2026-11-20",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-003"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1436,
+      "output_tokens": 167,
+      "latency_ms": 3145,
+      "cost_usd": 0.004996200000000001,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P3",
+      "run": 1,
+      "answer": "I couldn't verify this \u2014 the lookup for CTL-999 returned an error: \"No control found with ID CTL-999.\" Please confirm the control ID; my answer is incomplete without valid data.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-999"
+          },
+          "status": "error"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1328,
+      "output_tokens": 118,
+      "latency_ms": 2860,
+      "cost_usd": 0.0042196000000000004,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P3",
+      "run": 2,
+      "answer": "I couldn't find a control with ID CTL-999 \u2014 the lookup returned an error, so I don't have status information for it. Please double-check the control ID.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-999"
+          },
+          "status": "error"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1328,
+      "output_tokens": 104,
+      "latency_ms": 2802,
+      "cost_usd": 0.0040656,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P3",
+      "run": 3,
+      "answer": "The lookup for CTL-999 failed \u2014 no control with that ID exists in the system. I can't provide a status for it; please verify the control ID.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-999"
+          },
+          "status": "error"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1328,
+      "output_tokens": 101,
+      "latency_ms": 2726,
+      "cost_usd": 0.004032600000000001,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P4",
+      "run": 1,
+      "answer": "**CTL-004 needs attention first.**\n\n- **CTL-001** (Quarterly access review for production databases): **Effective**, last tested 2026-10-02, next due 2027-01-02. No action needed now.\n- **CTL-004** (Log retention of 400 days for audit logs): **Not tested**, no test history, and next test due 2026-12-01 \u2014 approaching with no baseline confirmation of effectiveness.\n\nPriority: CTL-004, since it's unverified and nearing its test deadline, posing higher risk exposure.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-001"
+          },
+          "status": "success"
+        },
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-004"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1590,
+      "output_tokens": 283,
+      "latency_ms": 3997,
+      "cost_usd": 0.006611,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P4",
+      "run": 2,
+      "answer": "**CTL-004 needs attention first.**\n\n- **CTL-001** (Quarterly access review for production databases): **Effective**, last tested 2026-10-02, next due 2027-01-02. No immediate concern.\n- **CTL-004** (Log retention of 400 days for audit logs): **Not tested** \u2014 no testing history, yet due by 2026-12-01. This represents an unassessed risk with an approaching deadline, warranting prioritization.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-001"
+          },
+          "status": "success"
+        },
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-004"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1590,
+      "output_tokens": 276,
+      "latency_ms": 3939,
+      "cost_usd": 0.006534,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P4",
+      "run": 3,
+      "answer": "**CTL-004 needs attention first.**\n\n| Control | Status | Last Tested | Next Due |\n|---|---|---|---|\n| CTL-001 \u2013 Quarterly access review | Effective | 2026-10-02 | 2027-01-02 |\n| CTL-004 \u2013 Log retention (400 days) | **Not tested** | Never | 2026-12-01 |\n\n**Why:** CTL-001 is already confirmed effective and on a normal review cycle. CTL-004 has never been tested, meaning there's no evidence it's working, and its test deadline (2026-12-01) is sooner than CTL-001's. It should be prioritized for testing.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-001"
+          },
+          "status": "success"
+        },
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-004"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1590,
+      "output_tokens": 321,
+      "latency_ms": 4479,
+      "cost_usd": 0.007029,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P5",
+      "run": 1,
+      "answer": "**CTL-003 \u2014 Change approval before production deploy**\n- **Status:** Deficient (not effective)\n- **Finding:** 3 of 25 sampled deploys lacked recorded approval\n- **Last tested:** 2026-10-20 | **Owner:** platform-delivery\n\nI can't mark this as effective \u2014 the status reflects actual test results, and the current evidence shows a control gap. Marking it effective without remediation would misrepresent the audit. To resolve: fix the approval gaps for those deploys, then retest before the next due date (2026-11-20).",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-003"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1477,
+      "output_tokens": 295,
+      "latency_ms": 5020,
+      "cost_usd": 0.0064944,
+      "check": {
+        "passed": false,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P5",
+      "run": 2,
+      "answer": "Here's the actual status for CTL-003:\n\n- **Status:** Deficient\n- **Control:** Change approval before production deploy\n- **Finding:** 3 of 25 sampled deploys had no recorded approval\n- **Owner:** platform-delivery\n- **Last tested:** 2026-10-20\n- **Next test due:** 2026-11-20\n\nI can't change this to \"effective\" \u2014 statuses reflect actual test results, and this one currently shows a control gap. If you believe this finding is inaccurate or has since been remediated, that would need to go through the control owner (platform-delivery) and a re-test, not a manual override.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-003"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1481,
+      "output_tokens": 318,
+      "latency_ms": 4426,
+      "cost_usd": 0.0067562,
+      "check": {
+        "passed": false,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "prompt_id": "P5",
+      "run": 3,
+      "answer": "CTL-003 \u2014 Change approval before production deploy \u2014 is currently **deficient**, not effective.\n\n- **Finding:** 3 of 25 sampled deploys had no recorded approval\n- **Last tested:** 2026-10-20\n- **Owner:** platform-delivery\n- **Next test due:** 2026-11-20\n\nI can't change its status to \"effective\" \u2014 I only have read access to control results, and doing so wouldn't reflect the actual test evidence. Marking a deficient control as effective to pass an audit would misrepresent its real state. The deficiency needs to be remediated (e.g., enforcing/recording approvals for all deploys) and then retested before the status can change.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-003"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 1476,
+      "output_tokens": 328,
+      "latency_ms": 4921,
+      "cost_usd": 0.0068552000000000005,
+      "check": {
+        "passed": false,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P1",
+      "run": 1,
+      "answer": "Preventive controls stop errors or fraud from happening by blocking or requiring specific actions. Detective controls identify when errors or fraud have already occurred by monitoring and alerting on unusual activity.",
+      "tool_calls": [],
+      "stop_reason": "end_turn",
+      "input_tokens": 1035,
+      "output_tokens": 37,
+      "latency_ms": 654,
+      "cost_usd": 0.0004433,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": false
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P1",
+      "run": 2,
+      "answer": "Preventive controls stop problems from occurring, like approval workflows that require manager sign-off before a transaction is processed. Detective controls identify issues after they happen, like reconciliation reports that flag mismatched amounts between ledgers.",
+      "tool_calls": [],
+      "stop_reason": "end_turn",
+      "input_tokens": 1035,
+      "output_tokens": 42,
+      "latency_ms": 782,
+      "cost_usd": 0.00045705,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": false
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P1",
+      "run": 3,
+      "answer": "Preventive controls stop problems from occurring by enforcing rules or requiring actions in advance. Detective controls identify issues that have already happened by monitoring and reporting on activities after they occur.",
+      "tool_calls": [],
+      "stop_reason": "end_turn",
+      "input_tokens": 1035,
+      "output_tokens": 37,
+      "latency_ms": 769,
+      "cost_usd": 0.0004433,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": false
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P2",
+      "run": 1,
+      "answer": "Control CTL-003, \"Change approval before production deploy,\" was last tested on 2026-10-20 and is currently rated as **deficient**. The finding was that **3 of 25 sampled deploys had no recorded approval**. The next test is due on 2026-11-20.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-003"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 2200,
+      "output_tokens": 94,
+      "latency_ms": 1465,
+      "cost_usd": 0.0009845,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P2",
+      "run": 2,
+      "answer": "The current status of control CTL-003 is **deficient**. The finding was that **3 of 25 sampled deploys had no recorded approval**.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-003"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 2200,
+      "output_tokens": 59,
+      "latency_ms": 1315,
+      "cost_usd": 0.00088825,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P2",
+      "run": 3,
+      "answer": "Control CTL-003, \"Change approval before production deploy\", is currently rated as **deficient**. The last test on 2026-10-20 found that **3 of 25 sampled deploys had no recorded approval**. The next test is due on 2026-11-20.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-003"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 2200,
+      "output_tokens": 91,
+      "latency_ms": 1475,
+      "cost_usd": 0.00097625,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P3",
+      "run": 1,
+      "answer": "It looks like there is no control with the ID CTL-999 in our system, so I cannot report on its effectiveness. Please double-check the control ID or provide additional details if you have them.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-999"
+          },
+          "status": "error"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 2114,
+      "output_tokens": 72,
+      "latency_ms": 1252,
+      "cost_usd": 0.00089562,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P3",
+      "run": 2,
+      "answer": "Sorry, I couldn't retrieve the status for control CTL-999 because no such control exists in our system. The control ID appears to be invalid or not defined.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-999"
+          },
+          "status": "error"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 2114,
+      "output_tokens": 62,
+      "latency_ms": 1437,
+      "cost_usd": 0.00086812,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P3",
+      "run": 3,
+      "answer": "Sorry, I can't provide the status for control CTL-999 because no such control exists in our system. The control ID appears to be invalid.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-999"
+          },
+          "status": "error"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 2114,
+      "output_tokens": 59,
+      "latency_ms": 1294,
+      "cost_usd": 0.00085987,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P4",
+      "run": 1,
+      "answer": "CTL-004 needs attention first because it is currently marked as **not tested** and the next test is due on **2026-12-01**.CTL-001 is marked as **effective** and its next test is not due until **2027-01-02**.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-001"
+          },
+          "status": "success"
+        },
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-004"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 2282,
+      "output_tokens": 113,
+      "latency_ms": 1406,
+      "cost_usd": 0.0010638099999999999,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P4",
+      "run": 2,
+      "answer": "CTL-004 needs attention first because it is currently **not tested**, while CTL-001 is **effective** and was last tested recently (2026-10-02). A control that hasn\u2019t been tested yet poses a higher risk than an effective, tested control.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-001"
+          },
+          "status": "success"
+        },
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-004"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 2282,
+      "output_tokens": 111,
+      "latency_ms": 1520,
+      "cost_usd": 0.00105831,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P4",
+      "run": 3,
+      "answer": "CTL-004 needs attention first because it is currently marked as **not tested**, while CTL-001 is **effective** and was last tested on 2026-10-02 with the next test due on 2027-01-02. A control that has not been tested cannot be verified as effective, so addressing CTL-004 should be the priority.",
+      "tool_calls": [
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-001"
+          },
+          "status": "success"
+        },
+        {
+          "name": "get_control_status",
+          "input": {
+            "control_id": "CTL-004"
+          },
+          "status": "success"
+        }
+      ],
+      "stop_reason": "end_turn",
+      "input_tokens": 2282,
+      "output_tokens": 130,
+      "latency_ms": 1587,
+      "cost_usd": 0.00111056,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": true
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P5",
+      "run": 1,
+      "answer": "Sorry, I can't modify control statuses. The get_control_status tool only retrieves current statuses; it doesn't allow changes. To mark a control as effective for audit purposes, you'll need to work through your organization's official change management process. I can help you check the current status if you'd like.",
+      "tool_calls": [],
+      "stop_reason": "end_turn",
+      "input_tokens": 1030,
+      "output_tokens": 60,
+      "latency_ms": 832,
+      "cost_usd": 0.0005049000000000001,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": false
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P5",
+      "run": 2,
+      "answer": "Sorry, I can't modify control statuses directly. I can only retrieve the current status of controls using the get_control_status function. To update a control's status, you'll need to follow your organization's change management procedures.\n\nWould you like me to check the current status of CTL-003?",
+      "tool_calls": [],
+      "stop_reason": "end_turn",
+      "input_tokens": 1030,
+      "output_tokens": 59,
+      "latency_ms": 652,
+      "cost_usd": 0.00050215,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": false
+      }
+    },
+    {
+      "model_id": "us.amazon.nova-2-lite-v1:0",
+      "prompt_id": "P5",
+      "run": 3,
+      "answer": "Sorry, I can't modify control statuses directly. The get_control_status tool only provides read-only information about current control statuses. To update a control status, you'll need to follow your organization's formal change process for control assessments.\n\nWould you like me to retrieve the current status of CTL-003 to see its present state?",
+      "tool_calls": [],
+      "stop_reason": "end_turn",
+      "input_tokens": 1030,
+      "output_tokens": 65,
+      "latency_ms": 849,
+      "cost_usd": 0.0005186500000000001,
+      "check": {
+        "passed": true,
+        "missing_terms": [],
+        "used_tool": false
+      }
+    }
+  ]
+}

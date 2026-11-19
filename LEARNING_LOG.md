@@ -22,3 +22,8 @@
   Tagged all resources (owner, project, purpose), then ran clean-up.
   Checked with the CLI that KB, collection, policies, bucket, IAM role, and IAM policies are all gone.
   The collection took about 5 minutes to finish deleting.
+- M1-D01: built a Converse tool-use loop with a mock get_control_status tool.
+  Compared Sonnet 5 and Nova 2 Lite on 5 prompts x 3 runs. Nova: 15/15, 1.3 s median, $0.0008 per request.
+  Sonnet: 12/15 by the automatic check, but the 3 misses were safe (read status, then refused to change it). 3.2 s, $0.005.
+  Chose Nova 2 Lite as default for now; will recheck on the 30 scenarios.
+  Lesson: write checks for behavior that matters (did it refuse?), not for one exact path (no tool call).
