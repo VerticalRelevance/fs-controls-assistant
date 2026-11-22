@@ -1,0 +1,31 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "InvokeApprovedModels",
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": [
+        "arn:aws:bedrock:us-east-1:899456967600:inference-profile/us.amazon.nova-2-lite-v1:0",
+        "arn:aws:bedrock:us-east-1:899456967600:inference-profile/us.anthropic.claude-sonnet-5",
+        "arn:aws:bedrock:*::foundation-model/amazon.nova-2-lite-v1:0",
+        "arn:aws:bedrock:*::foundation-model/anthropic.claude-sonnet-5"
+      ]
+    },
+    {
+      "Sid": "RetrievePolicies",
+      "Effect": "Allow",
+      "Action": "bedrock:Retrieve",
+      "Resource": "arn:aws:bedrock:us-east-1:899456967600:knowledge-base/ERPMMNIAXI"
+    },
+    {
+      "Sid": "ApplyGuardrail",
+      "Effect": "Allow",
+      "Action": "bedrock:ApplyGuardrail",
+      "Resource": "arn:aws:bedrock:us-east-1:899456967600:guardrail/m7s47f1674sc"
+    }
+  ]
+}

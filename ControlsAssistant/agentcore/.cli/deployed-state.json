@@ -1,0 +1,37 @@
+{
+  "targets": {
+    "default": {
+      "resources": {
+        "runtimes": {
+          "controlsagent": {
+            "runtimeId": "ControlsAssistant_controlsagent-aSkEpJCs28",
+            "runtimeArn": "arn:aws:bedrock-agentcore:us-east-1:899456967600:runtime/ControlsAssistant_controlsagent-aSkEpJCs28",
+            "roleArn": "arn:aws:iam::899456967600:role/AgentCore-ControlsAssista-ApplicationAgentControlsa-0Ur6F7mRqhEL"
+          }
+        },
+        "memories": {
+          "controlsagentMemory": {
+            "memoryId": "ControlsAssistant_controlsagentMemory-DujSZkDuRL",
+            "memoryArn": "arn:aws:bedrock-agentcore:us-east-1:899456967600:memory/ControlsAssistant_controlsagentMemory-DujSZkDuRL"
+          }
+        },
+        "mcp": {
+          "gateways": {
+            "controls-gateway": {
+              "gatewayId": "controlsassistant-controls-gateway-vgx2088dq0",
+              "gatewayArn": "arn:aws:bedrock-agentcore:us-east-1:899456967600:gateway/controlsassistant-controls-gateway-vgx2088dq0",
+              "gatewayUrl": "https://controlsassistant-controls-gateway-vgx2088dq0.gateway.bedrock-agentcore.us-east-1.amazonaws.com/mcp",
+              "targets": {
+                "controls-tools": {
+                  "targetId": "WM8FPI8YOZ"
+                }
+              }
+            }
+          }
+        },
+        "stackName": "AgentCore-ControlsAssistant-default",
+        "deployHash": "b703fefa1073ff6a"
+      }
+    }
+  }
+}

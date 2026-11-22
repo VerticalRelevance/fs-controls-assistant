@@ -1,0 +1,127 @@
+{
+  "$schema": "https://schema.agentcore.aws.dev/v1/agentcore.json",
+  "name": "ControlsAssistant",
+  "version": 1,
+  "managedBy": "CDK",
+  "tags": {
+    "agentcore:created-by": "agentcore-cli",
+    "agentcore:project-name": "ControlsAssistant",
+    "owner": "ppathak",
+    "project": "fs-controls-assistant",
+    "purpose": "bedrock-training"
+  },
+  "runtimes": [
+    {
+      "name": "controlsagent",
+      "build": "CodeZip",
+      "entrypoint": "main.py",
+      "codeLocation": "app/controlsagent/",
+      "runtimeVersion": "PYTHON_3_13",
+      "networkMode": "PUBLIC",
+      "protocol": "HTTP",
+      "authorizerType": "CUSTOM_JWT",
+      "authorizerConfiguration": {
+        "customJwtAuthorizer": {
+          "discoveryUrl": "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_trSgC3XJH/.well-known/openid-configuration",
+          "allowedClients": [
+            "60rl20utgl8lq1nfj9vkp38v8f"
+          ]
+        }
+      },
+      "requestHeaderAllowlist": [
+        "Authorization"
+      ],
+      "additionalPolicies": [
+        "iam-extra.json"
+      ],
+      "envVars": [
+        {
+          "name": "MODEL_ID",
+          "value": "us.amazon.nova-2-lite-v1:0"
+        },
+        {
+          "name": "KNOWLEDGE_BASE_ID",
+          "value": "ERPMMNIAXI"
+        },
+        {
+          "name": "GUARDRAIL_ID",
+          "value": "m7s47f1674sc"
+        },
+        {
+          "name": "GUARDRAIL_VERSION",
+          "value": "1"
+        },
+        {
+          "name": "COGNITO_USER_POOL_ID",
+          "value": "us-east-1_trSgC3XJH"
+        },
+        {
+          "name": "ALLOW_FAULT_INJECTION",
+          "value": "true"
+        },
+        {
+          "name": "GATEWAY_URL",
+          "value": "https://controlsassistant-controls-gateway-vgx2088dq0.gateway.bedrock-agentcore.us-east-1.amazonaws.com/mcp"
+        }
+      ],
+      "tags": {
+        "owner": "ppathak",
+        "project": "fs-controls-assistant",
+        "purpose": "bedrock-training"
+      }
+    }
+  ],
+  "memories": [
+    {
+      "name": "controlsagentMemory",
+      "eventExpiryDuration": 7,
+      "strategies": [
+        {
+          "type": "USER_PREFERENCE",
+          "namespaceTemplates": [
+            "/users/{actorId}/preferences"
+          ]
+        }
+      ]
+    }
+  ],
+  "knowledgeBases": [],
+  "credentials": [],
+  "evaluators": [],
+  "onlineEvalConfigs": [],
+  "agentCoreGateways": [
+    {
+      "name": "controls-gateway",
+      "protocolType": "MCP",
+      "description": "Read-only control and evidence tools",
+      "targets": [
+        {
+          "name": "controls-tools",
+          "targetType": "lambdaFunctionArn",
+          "lambdaFunctionArn": {
+            "lambdaArn": "arn:aws:lambda:us-east-1:899456967600:function:fs-controls-assistant-tools",
+            "toolSchemaFile": "tools-schema.json"
+          }
+        }
+      ],
+      "authorizerType": "CUSTOM_JWT",
+      "authorizerConfiguration": {
+        "customJwtAuthorizer": {
+          "discoveryUrl": "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_trSgC3XJH/.well-known/openid-configuration",
+          "allowedClients": [
+            "60rl20utgl8lq1nfj9vkp38v8f"
+          ]
+        }
+      },
+      "enableSemanticSearch": false,
+      "exceptionLevel": "NONE"
+    }
+  ],
+  "policyEngines": [],
+  "configBundles": [],
+  "abTests": [],
+  "harnesses": [],
+  "datasets": [],
+  "capacityProviders": [],
+  "payments": []
+}

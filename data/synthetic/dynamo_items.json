@@ -1,0 +1,111 @@
+{
+  "_note": "Synthetic records loaded into DynamoDB by scripts/setup_tools.py",
+  "items": [
+    {
+      "pk": "CTL#CTL-001",
+      "control_id": "CTL-001",
+      "name": "Quarterly access review for production databases",
+      "owner": "platform-security",
+      "status": "effective",
+      "last_tested": "2026-10-02",
+      "next_test_due": "2027-01-02",
+      "evidence": [
+        {
+          "evidence_id": "EV-001-Q3",
+          "description": "Q3 2026 access review sign-off",
+          "status": "collected",
+          "date": "2026-10-02"
+        }
+      ]
+    },
+    {
+      "pk": "CTL#CTL-002",
+      "control_id": "CTL-002",
+      "name": "Encryption at rest for customer data stores",
+      "owner": "platform-infra",
+      "status": "effective",
+      "last_tested": "2026-09-15",
+      "next_test_due": "2026-12-15",
+      "evidence": [
+        {
+          "evidence_id": "EV-002-KMS",
+          "description": "KMS rotation report",
+          "status": "collected",
+          "date": "2026-09-15"
+        }
+      ]
+    },
+    {
+      "pk": "CTL#CTL-003",
+      "control_id": "CTL-003",
+      "name": "Change approval before production deploy",
+      "owner": "platform-delivery",
+      "status": "deficient",
+      "last_tested": "2026-10-20",
+      "next_test_due": "2026-11-20",
+      "finding": "3 of 25 sampled deploys had no recorded approval.",
+      "evidence": [
+        {
+          "evidence_id": "EV-003-SAMPLE",
+          "description": "Deploy approval sample (25 changes)",
+          "status": "collected",
+          "date": "2026-10-20"
+        },
+        {
+          "evidence_id": "EV-003-REMED",
+          "description": "Remediation plan for missing approvals",
+          "status": "missing",
+          "due": "2026-11-19"
+        }
+      ]
+    },
+    {
+      "pk": "CTL#CTL-004",
+      "control_id": "CTL-004",
+      "name": "Log retention of 400 days for audit logs",
+      "owner": "platform-observability",
+      "status": "not_tested",
+      "next_test_due": "2026-12-01",
+      "evidence": [
+        {
+          "evidence_id": "EV-004-RET",
+          "description": "Log group retention settings export",
+          "status": "missing",
+          "due": "2026-12-01"
+        }
+      ]
+    },
+    {
+      "pk": "CTL#CTL-005",
+      "control_id": "CTL-005",
+      "name": "Vendor risk assessment before onboarding",
+      "owner": "third-party-risk",
+      "status": "effective",
+      "last_tested": "2026-08-30",
+      "next_test_due": "2026-11-30",
+      "evidence": [
+        {
+          "evidence_id": "EV-005-VRA",
+          "description": "Vendor assessments for Q3 onboarding",
+          "status": "collected",
+          "date": "2026-08-30"
+        }
+      ]
+    },
+    {
+      "pk": "USER#alice",
+      "teams": [
+        "platform-security",
+        "platform-delivery"
+      ]
+    },
+    {
+      "pk": "USER#bob",
+      "teams": [
+        "platform-infra",
+        "platform-observability",
+        "third-party-risk"
+      ]
+    }
+  ]
+}

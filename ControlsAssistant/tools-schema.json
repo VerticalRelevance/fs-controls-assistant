@@ -1,0 +1,26 @@
+[
+  {
+    "name": "get_control_status",
+    "description": "Get the current test status of one control (effective, deficient, or not_tested), its owner, test dates, and finding. Control IDs look like CTL-001.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "control_id": {"type": "string", "description": "Control ID in the form CTL-NNN, for example CTL-003."},
+        "caller_token": {"type": "string", "description": "Set by the agent code from the verified request. Never set by the model."}
+      },
+      "required": ["control_id", "caller_token"]
+    }
+  },
+  {
+    "name": "get_evidence_status",
+    "description": "List the evidence items for one control and whether each is collected or missing, with dates. Control IDs look like CTL-001.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "control_id": {"type": "string", "description": "Control ID in the form CTL-NNN, for example CTL-003."},
+        "caller_token": {"type": "string", "description": "Set by the agent code from the verified request. Never set by the model."}
+      },
+      "required": ["control_id", "caller_token"]
+    }
+  }
+]
