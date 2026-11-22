@@ -16,6 +16,8 @@ def load_spans(path):
     spans = []
     for row in rows:
         m = row["@message"] if isinstance(row.get("@message"), dict) else row
+        if "name" not in m or "spanId" not in m:
+            continue
         attrs = m.get("attributes", {})
         spans.append({
             "id": m["spanId"], "parent": m.get("parentSpanId"), "name": m["name"],

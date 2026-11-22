@@ -67,7 +67,7 @@ def over_limit():
 
 @tool
 def search_policies(question: str) -> str:
-    """Search the approved policy documents. Returns passages with source ID, version, status, and effective date."""
+    """Search the approved policy documents. Each passage has a cite_as value. After every policy fact, copy that passage's cite_as exactly, for example [POL-001 v2.0]."""
     if over_limit():
         return json.dumps({"ok": False, "error": "tool_limit", "message": "Tool-call limit reached."})
     ctx = request_ctx.get()
@@ -79,6 +79,8 @@ def search_policies(question: str) -> str:
     ctx["retrieved"] += [(p["source_id"], p["version"]) for p in passages]
     ctx["passages"] += [{k: p[k] for k in ("source_id", "version", "status", "text")} for p in passages]
     ctx["dropped"] += dropped
+    for p in passages:
+        p["cite_as"] = f"[{p['source_id']} v{p['version']}]"
     result = {"ok": True, "passages": passages}
     if dropped:
         result["note"] = f"{len(dropped)} passage(s) were removed because they contained instructions aimed at the assistant."

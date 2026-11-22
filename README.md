@@ -1,50 +1,121 @@
 # Financial Services Controls Assistant
 
-Training project for the VR "Amazon Bedrock and AgentCore" two-week module.
-Uses synthetic data only.
+Training project for the VR "Amazon Bedrock and AgentCore" module (M1). Synthetic data only.
 
-## Setup
+A policy question returns cited facts with the policy version. Unsupported questions abstain.
+Status questions use live tool results. A combined question retrieves the requirement, checks the record, and explains the gap.
+Two Cognito users (alice, bob) see only their own team's records and their own memories.
 
-Needs Python 3.12+, [uv](https://docs.astral.sh/uv/), and AWS CLI v2.
+Architecture and permission map: [docs/architecture.md](docs/architecture.md).
+Runbook: [docs/runbook.md](docs/runbook.md). Costs: [docs/cost-worksheet.md](docs/cost-worksheet.md).
+
+## Prerequisites
+
+- Python 3.12+, [uv](https://docs.astral.sh/uv/), AWS CLI v2, Node 20+
+- AgentCore CLI **0.30.0** pinned in `../agentcore-cli`:
+  `mkdir ../agentcore-cli && cd ../agentcore-cli && npm install --save-exact @aws/agentcore@0.30.0`
+- AWS profile `vr-training` (VR Labs account, us-east-1). Log in: `aws sso login --sso-session saml`
+- CDK bootstrapped in the account and Region (already done in Labs)
 
 ```sh
 uv sync
-cp .env.example .env    # then fill in profile, Region, and model IDs
-aws sso login --sso-session saml
+cp .env.example .env        # AWS_PROFILE=vr-training, AWS_REGION=us-east-1, model IDs
 uv run python scripts/check_access.py
 ```
 
-`check_access.py` checks who you are logged in as and calls each model in `.env` once.
-It refuses to run with a profile that does not start with `vr-`, so client accounts are never used by mistake.
+All scripts refuse to run unless `AWS_PROFILE` starts with `vr-`.
+
+## Create everything (about 15 minutes)
+
+Each script saves IDs in `.state/resources.json` (not committed) and is safe to rerun.
+
+```sh
+uv run python scripts/setup_kb.py          # S3 docs bucket, S3 Vectors index, KB role, Knowledge Base, ingestion
+uv run python scripts/setup_guardrail.py   # Guardrail + numbered version
+uv run python scripts/setup_identity.py    # Cognito pool, app client, users alice and bob
+uv run python scripts/setup_tools.py       # DynamoDB records, tools Lambda
+```
+
+Copy `KNOWLEDGE_BASE_ID`, `GUARDRAIL_ID`, `GUARDRAIL_VERSION` printed above into `.env`.
+
+Then deploy the agent. In a fresh account, update the IDs in `ControlsAssistant/agentcore/agentcore.json`
+(Cognito discovery URL and client ID for the runtime and gateway, env vars, Lambda ARN), `aws-targets.json` (account),
+and `app/controlsagent/iam-extra.json` (KB and Guardrail ARNs). Then:
+
+```sh
+cd ControlsAssistant
+npx --prefix ../../agentcore-cli agentcore validate
+npx --prefix ../../agentcore-cli agentcore deploy --target default
+```
+
+The deploy prints the Gateway URL. Put it in the runtime env var `GATEWAY_URL` in `agentcore.json` and deploy again.
+Save the outputs (runtime ARN, memory ID, gateway URL and ID, stack name) into `.state/resources.json`
+(keys `runtime_arn`, `memory_id`, `gateway_url`, `gateway_id`, `agentcore_stack`).
+
+Resources the deploy creates (CloudFormation stack `AgentCore-ControlsAssistant-default`):
+AgentCore Runtime + execution role, Memory (user preference strategy), Gateway + target + gateway role, Transaction Search setup.
+
+## Ingest or update documents
+
+Edit or add files in `data/corpus/` (each `.md` with a `.md.metadata.json` holding `source_id`, `version`, `effective_date`, `status`).
+Then rerun `uv run python scripts/setup_kb.py`. It uploads and starts an ingestion job, and prints the statistics.
 
 ## Use
 
 ```sh
-uv run python -m controls_assistant.cli "What is the status of CTL-003?"
-uv run python -m controls_assistant.cli --verbose --model us.anthropic.claude-sonnet-5 "Is CTL-999 effective?"
+# Deployed agent, as a test user (new session each time unless --session is given)
+uv run python -m controls_assistant.agent_client --user alice "Does CTL-003 meet the deploy approval policy?"
+uv run python -m controls_assistant.agent_client --user bob --extra '{"actor_id": "alice"}' "What is the status of CTL-001?"
+uv run python -m controls_assistant.agent_client --user none "Hello"      # unauthenticated, rejected
+
+# Local Week 1 pieces
+uv run python -m controls_assistant.cli --verbose "What is the status of CTL-003?"
 uv run pytest -q
-uv run python scripts/compare_models.py    # M1-D01 comparison, about $0.10
 ```
+
+Demo notebooks: `uv run jupyter lab notebooks/` (01 foundations, 02 RAG and Guardrails, 03 AgentCore, 04 evaluation).
+
+## Evaluate
+
+```sh
+uv run python evaluation/run_eval.py --label baseline --runs 3
+uv run python evaluation/run_eval.py --label final --runs 3
+uv run python evaluation/run_eval.py --label check --runs 1 --only G01,A02,M03
+```
+
+Scenarios: `evaluation/scenarios.json` (30, frozen). Results: `evidence/m1-d04/`. Write-up: `evidence/m1-d04/README.md`.
+
+## Updates and rollback
+
+- Agent: change code under `ControlsAssistant/app/controlsagent/`, deploy. Roll back with `git checkout <commit> -- ControlsAssistant/` and deploy.
+- Guardrail: change `scripts/setup_guardrail.py`, rerun (new version). Roll back by pointing `GUARDRAIL_VERSION` to the old version and deploying.
+- Documents: the docs bucket is versioned. Revert the file in git and rerun `setup_kb.py`.
+
+## Teardown
+
+```sh
+uv run python scripts/teardown.py --yes
+```
+
+Deletes the AgentCore stack, Lambda, roles, DynamoDB table, Cognito pool, Knowledge Base, Guardrail, S3 Vectors, docs bucket, and log groups.
+It prints any resource still tagged `project=fs-controls-assistant`. The tagging API can lag a few minutes.
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `src/controls_assistant/agent_loop.py` | Converse tool-use loop with call limit and timeout |
-| `src/controls_assistant/tools.py` | Mock read-only tool and argument checks |
-| `src/controls_assistant/config.py` | Reads `.env`. No Region or model IDs in code |
-| `config/pricing.json` | Token prices used for cost estimates |
-| `data/synthetic/` | Synthetic control records |
-| `evidence/` | Evidence per deliverable (M1-D01, ...) |
-| `docs/` | Architecture, backlog, review notes |
+| `ControlsAssistant/` | AgentCore CLI project: `agentcore/agentcore.json` (config), `app/controlsagent/` (agent code) |
+| `lambda_tools/handler.py` | Gateway tool backend with backend authorization |
+| `src/controls_assistant/` | Week 1 tool loop, RAG module, test client, config |
+| `scripts/` | Setup, teardown, model comparison, trace summary |
+| `data/corpus/`, `data/synthetic/` | Synthetic documents and records |
+| `evaluation/` | Frozen scenarios and eval runner |
+| `evidence/` | Evidence per deliverable |
+| `notebooks/` | Demo notebooks |
+| `docs/` | Architecture, runbook, costs, backlog, review notes |
 
-## Account
+## Account notes
 
-Profile `vr-training` = VR Labs account `899456967600`, role `AWSAdministratorAccess`, Region `us-east-1`.
-A VR org SCP blocks some models. See `.env.example` for the allowed list.
-Sonnet 5 does not accept `temperature`, so do not send it to that model.
-
-## Still to write
-
-- Ingestion, invocation, updates, rollback, and teardown steps
-- Architecture and permission map
+Profile `vr-training` = VR Labs account `899456967600`, Region `us-east-1`.
+A VR org SCP blocks many models, including all `global.*` inference profiles. Use `us.*` IDs. See `.env.example`.
+Sonnet 5 does not accept `temperature`.
