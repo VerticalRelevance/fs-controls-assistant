@@ -162,13 +162,19 @@ print("bob teams: platform-infra, platform-observability, third-party-risk (CTL-
         ("code", 'show(invoke(None, {"prompt": "What is the status of CTL-001?"}, new_session_id(), state, settings.region), keys=("http_status", "status", "error"))'),
         ("md", "## 6. Failure handling: tool timeout (CTL-900) and throttling with bounded retries (CTL-901)"),
         ("code", 'show(ask_as("alice", "What is the status of CTL-900?"))\nshow(ask_as("alice", "What is the status of CTL-901?"))'),
-        ("md", "## 7. Memory: same-session recall"),
+        ("md", "## 7. Memory: start clean, then same-session recall\n\nFirst delete both users' long-term preference records so the demo starts from nothing."),
+        ("code", """import boto3
+mem = boto3.Session(profile_name=settings.profile, region_name=settings.region).client("bedrock-agentcore")
+for user in ("alice", "bob"):
+    recs = mem.list_memory_records(memoryId=state["memory_id"], namespace=f"/users/{user}/preferences", maxResults=100)["memoryRecordSummaries"]
+    for rec in recs:
+        mem.delete_memory_record(memoryId=state["memory_id"], memoryRecordId=rec["memoryRecordId"])
+    print(user, "records deleted:", len(recs))"""),
         ("code", """s1 = new_session_id()
 show(ask_as("alice", "Please remember for future conversations: I prefer short bullet-point answers.", session=s1), keys=("answer",))
 show(ask_as("alice", "What answer format did I just ask for?", session=s1), keys=("answer",))"""),
         ("md", "## 8. Memory: cross-session recall\n\nPreference extraction is asynchronous, so we poll (bounded) for the long-term record before asking in a **new** session."),
-        ("code", """import time, boto3
-mem = boto3.Session(profile_name=settings.profile, region_name=settings.region).client("bedrock-agentcore")
+        ("code", """import time
 start = time.time()
 records = []
 while time.time() - start < 180 and not records:
@@ -179,8 +185,8 @@ print(f"waited {time.time() - start:.0f}s, records found: {len(records)}")
 for rec in records:
     print(" -", rec["content"]["text"][:150])"""),
         ("code", 'show(ask_as("alice", "What answer format do I prefer?"), keys=("answer", "session"))'),
-        ("md", "## 9. Memory isolation: bob cannot see alice's preference, even with a forged actor ID"),
-        ("code", 'show(ask_as("bob", "What answer format does alice prefer?"), keys=("answer", "actor_id"))\nshow(ask_as("bob", "What answer format do I prefer?", actor_id="alice"), keys=("answer", "actor_id", "ignored_identity_fields"))'),
+        ("md", "## 9. Memory isolation: bob cannot see alice's preference, even with a forged actor ID\n\nThe strongest proof is the store itself: bob's namespace is empty."),
+        ("code", 'show(ask_as("bob", "What answer format does alice prefer?"), keys=("answer", "actor_id"))\nshow(ask_as("bob", "What answer format do I prefer?", actor_id="alice"), keys=("answer", "actor_id", "ignored_identity_fields"))\nfor user in ("alice", "bob"):\n    n = len(mem.list_memory_records(memoryId=state["memory_id"], namespace=f"/users/{user}/preferences", maxResults=50)["memoryRecordSummaries"])\n    print(f"{user} preference records: {n}")'),
         ("md", "## Resource inventory"),
         ("code", """for k in ("runtime_arn", "memory_id", "gateway_id", "gateway_url", "tools_function_arn", "table_name", "user_pool_id",
           "kb_id", "guardrail_id", "docs_bucket", "vector_bucket", "agentcore_stack"):

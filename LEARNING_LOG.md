@@ -27,3 +27,14 @@
   Sonnet: 12/15 by the automatic check, but the 3 misses were safe (read status, then refused to change it). 3.2 s, $0.005.
   Chose Nova 2 Lite as default for now; will recheck on the 30 scenarios.
   Lesson: write checks for behavior that matters (did it refuse?), not for one exact path (no tool call).
+
+## 2026-11-22
+
+- Built D02-D05 in one push: KB on S3 Vectors, Guardrail, AgentCore agent with Gateway tools, Cognito, Memory, eval runner.
+- S3 Vectors scores: relevant ~0.85+, unrelated ~0.60. Used 0.65 as the abstain cut-off.
+- Guardrail prompt-attack check on each retrieved passage drops the poisoned vendor FAQ. Cost: the harmless part of that doc is lost too.
+- The AgentCore CLI passes no user identity to tools by default. Allowed the Authorization header, passed the user's token to Gateway, and validated it again in Lambda.
+- Baseline 26/26/25. Most failures were citation format. Added cite_as to passages: final 27/27/28.
+- Lesson: phrase-based checks give false failures (the word "bullet" as an example). Check against the stored data, not words.
+- Lesson: the model can present a system rule ("keep answers short") as a remembered preference. Needs an explicit rule.
+- Long-term preference extraction took about 60 s.

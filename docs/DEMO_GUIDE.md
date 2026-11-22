@@ -67,6 +67,20 @@ Agent deploy command: `cd ControlsAssistant && npx --prefix ../../agentcore-cli 
 - **What if Bedrock throttles?** boto3 standard retries (3), agent tool retries (2) for retryable backend errors, explicit incomplete answer when retries run out.
 - **How do you know answers are grounded?** Deterministic citation checks (cited source must be one that was retrieved) plus a Sonnet 5 judge for groundedness, plus a human review of 10 cases.
 
+## Evaluation numbers to quote
+
+- Baseline 26/30, 26/30, 25/30. Final 27/30, 27/30, 28/30 (gate needs 27).
+- Authorization 12/12, failure recovery 9/9, content safety 9/9 in both baseline and final.
+- One improvement: `cite_as` on each passage. Grounding 25/30 -> 27/30.
+- Median 9.0 s, p95 12.3 s, error rate 0, about $0.001 model cost per successful task.
+- Full write-up: `evidence/m1-d04/README.md`.
+
+## Be ready for this question: "Is M03/M04 a memory leak?"
+
+No. Show notebook 03 section 9: bob's preference record count is 0, his actor ID is bob, and the forged field is listed as ignored.
+The automatic check failed because bob's answer offered "bullet points" as an example format.
+Also say you found a real issue: bob is sometimes told "you prefer short answers". That comes from the system prompt rule "Keep answers short", not from memory. It is in the backlog.
+
 ## Limits to say out loud
 
 - The caller token is passed to the tool Lambda as an argument. Gateway tool logs could contain it. Production fix: a Gateway request interceptor or a signed internal token instead.

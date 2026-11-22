@@ -1,0 +1,31 @@
+Spans: 29, total 6155 ms
+
+- POST /invocations  +0 ms, 6155 ms  {'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+  - Bedrock Runtime.ApplyGuardrail  +56 ms, 184 ms  {'rpc.method': 'ApplyGuardrail', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+  - Bedrock AgentCore.ListEvents  +399 ms, 49 ms  {'rpc.method': 'ListEvents', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+  - Bedrock AgentCore.ListEvents  +449 ms, 43 ms  {'rpc.method': 'ListEvents', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+  - Bedrock AgentCore.CreateEvent  +492 ms, 77 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+  - Bedrock AgentCore.CreateEvent  +574 ms, 71 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+  - invoke_agent Strands Agents  +646 ms, 5334 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 3495, 'gen_ai.usage.output_tokens': 205, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+    - Bedrock AgentCore.CreateEvent  +647 ms, 81 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+    - Bedrock AgentCore.CreateEvent  +729 ms, 73 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+    - Bedrock AgentCore.RetrieveMemoryRecords  +803 ms, 192 ms  {'rpc.method': 'RetrieveMemoryRecords', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+    - execute_event_loop_cycle  +996 ms, 3167 ms  {'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+      - chat  +996 ms, 655 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 1317, 'gen_ai.usage.output_tokens': 53, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+        - chat us.amazon.nova-2-lite-v1:0  +997 ms, 654 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 1317, 'gen_ai.usage.output_tokens': 53, 'rpc.method': 'ConverseStream', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+      - Bedrock AgentCore.CreateEvent  +1652 ms, 70 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+      - execute_tool search_policies  +1724 ms, 2290 ms  {'gen_ai.tool.name': 'search_policies', 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+        - Bedrock Agent Runtime.Retrieve  +1725 ms, 413 ms  {'rpc.method': 'Retrieve', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+        - Bedrock Runtime.ApplyGuardrail  +2138 ms, 171 ms  {'rpc.method': 'ApplyGuardrail', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+        - Bedrock Runtime.ApplyGuardrail  +2309 ms, 1249 ms  {'rpc.method': 'ApplyGuardrail', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+        - Bedrock Runtime.ApplyGuardrail  +3559 ms, 267 ms  {'rpc.method': 'ApplyGuardrail', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+        - Bedrock Runtime.ApplyGuardrail  +3826 ms, 187 ms  {'rpc.method': 'ApplyGuardrail', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+      - execute_tool get_control_status  +1724 ms, 297 ms  {'gen_ai.tool.name': 'get_control_status', 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+        - POST  +1734 ms, 286 ms  {'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+      - Bedrock AgentCore.CreateEvent  +4014 ms, 64 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+      - Bedrock AgentCore.CreateEvent  +4080 ms, 82 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+    - execute_event_loop_cycle  +4163 ms, 1817 ms  {'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+      - chat  +4163 ms, 1725 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 2178, 'gen_ai.usage.output_tokens': 152, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+        - chat us.amazon.nova-2-lite-v1:0  +4164 ms, 1724 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 2178, 'gen_ai.usage.output_tokens': 152, 'rpc.method': 'ConverseStream', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+      - Bedrock AgentCore.CreateEvent  +5889 ms, 88 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}
+  - Bedrock Runtime.ApplyGuardrail  +5981 ms, 172 ms  {'rpc.method': 'ApplyGuardrail', 'http.status_code': 200, 'session.id': 'session-cd648d5fda1c41c08442d48fa16220bd'}

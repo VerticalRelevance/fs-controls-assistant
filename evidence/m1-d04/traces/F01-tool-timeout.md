@@ -1,0 +1,25 @@
+Spans: 23, total 7751 ms
+
+- POST /invocations  +0 ms, 7751 ms  {'http.status_code': 200, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+  - Bedrock Runtime.ApplyGuardrail  +13 ms, 184 ms  {'rpc.method': 'ApplyGuardrail', 'http.status_code': 200, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+  - Bedrock AgentCore.ListEvents  +362 ms, 81 ms  {'rpc.method': 'ListEvents', 'http.status_code': 200, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+  - Bedrock AgentCore.ListEvents  +443 ms, 39 ms  {'rpc.method': 'ListEvents', 'http.status_code': 200, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+  - Bedrock AgentCore.CreateEvent  +483 ms, 77 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+  - Bedrock AgentCore.CreateEvent  +565 ms, 70 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+  - invoke_agent Strands Agents  +636 ms, 6951 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 2828, 'gen_ai.usage.output_tokens': 62, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+    - Bedrock AgentCore.CreateEvent  +636 ms, 78 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+    - Bedrock AgentCore.CreateEvent  +715 ms, 75 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+    - Bedrock AgentCore.RetrieveMemoryRecords  +791 ms, 199 ms  {'rpc.method': 'RetrieveMemoryRecords', 'http.status_code': 200, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+    - execute_event_loop_cycle  +992 ms, 5948 ms  {'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+      - chat  +992 ms, 681 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 1375, 'gen_ai.usage.output_tokens': 29, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+        - chat us.amazon.nova-2-lite-v1:0  +993 ms, 680 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 1375, 'gen_ai.usage.output_tokens': 29, 'rpc.method': 'ConverseStream', 'http.status_code': 200, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+      - Bedrock AgentCore.CreateEvent  +1673 ms, 75 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+      - execute_tool get_control_status  +1750 ms, 5028 ms  {'gen_ai.tool.name': 'get_control_status', 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+        - POST  +1758 ms, 5020 ms  ERROR  {'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+      - Bedrock AgentCore.CreateEvent  +6779 ms, 77 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+      - Bedrock AgentCore.CreateEvent  +6857 ms, 81 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+    - execute_event_loop_cycle  +6939 ms, 647 ms  {'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+      - chat  +6940 ms, 568 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 1453, 'gen_ai.usage.output_tokens': 33, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+        - chat us.amazon.nova-2-lite-v1:0  +6941 ms, 567 ms  {'gen_ai.request.model': 'us.amazon.nova-2-lite-v1:0', 'gen_ai.usage.input_tokens': 1453, 'gen_ai.usage.output_tokens': 33, 'rpc.method': 'ConverseStream', 'http.status_code': 200, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+      - Bedrock AgentCore.CreateEvent  +7508 ms, 78 ms  {'rpc.method': 'CreateEvent', 'http.status_code': 201, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
+  - Bedrock Runtime.ApplyGuardrail  +7588 ms, 162 ms  {'rpc.method': 'ApplyGuardrail', 'http.status_code': 200, 'session.id': 'session-723aaca4197c49139c327ccae862c11c'}
