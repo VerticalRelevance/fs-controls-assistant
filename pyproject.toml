@@ -16,4 +16,9 @@ build-backend = "uv_build"
 module-name = "controls_assistant"
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = [
+    "ipykernel>=7.4.0",
+    "jupyterlab>=4.6.6",
+    "nbformat>=5.11.1",
+    "pytest>=8",
+]

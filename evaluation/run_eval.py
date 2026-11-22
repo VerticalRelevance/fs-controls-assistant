@@ -135,7 +135,7 @@ def judge(bedrock, case, response):
     prompt = JUDGE_PROMPT.format(question=case["input"], passages=passages or "(none)", tools=tools, answer=response.get("answer", ""))
     result = bedrock.converse(modelId=JUDGE_MODEL_ID, messages=[{"role": "user", "content": [{"text": prompt}]}],
                               inferenceConfig={"maxTokens": 300})
-    text = result["output"]["message"]["content"][0]["text"]
+    text = "".join(block.get("text", "") for block in result["output"]["message"]["content"])
     match = re.search(r"\{.*\}", text, re.S)
     verdict = json.loads(match.group(0)) if match else {"supported": False, "citations_ok": False, "score": 0, "explanation": text}
     verdict["usage"] = result["usage"]
@@ -172,13 +172,17 @@ def run_once(label, run_number, scenarios, state, settings, bedrock, memory_clie
     deleted = reset_memory(memory_client, state["memory_id"])
     rows = []
     for case in scenarios:
-        final, responses, memory_wait = run_case(case, state, settings.region, {}, memory_client)
-        failures = check(case, final)
         verdict = None
-        if case["llm_judge"] and not failures:
-            verdict = judge(bedrock, case, final)
-            if not (verdict.get("supported") and verdict.get("citations_ok")):
-                failures.append(f"judge: {verdict.get('explanation')}")
+        try:
+            final, responses, memory_wait = run_case(case, state, settings.region, {}, memory_client)
+            failures = check(case, final)
+            if case["llm_judge"] and not failures:
+                verdict = judge(bedrock, case, final)
+                if not (verdict.get("supported") and verdict.get("citations_ok")):
+                    failures.append(f"judge: {verdict.get('explanation')}")
+        except Exception as error:
+            final, responses, memory_wait = {"status": "runner_error", "error": repr(error)[:300]}, [{}], None
+            failures = [f"runner error: {error!r}"[:300]]
         price = pricing["per_million_tokens"][AGENT_MODEL_ID]
         cost = sum(r.get("input_tokens", 0) * price["input"] + r.get("output_tokens", 0) * price["output"] for r in responses) / 1e6
         row = {
